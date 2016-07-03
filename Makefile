@@ -49,6 +49,8 @@ BUILDDIR := build
 all: make_builddir \
     emit_build_config \
     $(BUILDDIR)/minimal \
+    $(BUILDDIR)/restart \
+    $(BUILDDIR)/dynamic \
 
 .PHONY: emit_build_config
 emit_build_config: make_builddir
@@ -59,6 +61,12 @@ make_builddir:
 	@test -d $(BUILDDIR) || mkdir $(BUILDDIR)
 
 $(BUILDDIR)/minimal: $(SRC_DIR)/minimal.cpp
+	$(CXX) $(CXXFLAGS) $(LLVM_CXXFLAGS) $(CLANG_INCLUDES) $^ $(CLANG_LIBS) $(LLVM_LDFLAGS) -o $@
+
+$(BUILDDIR)/dynamic: $(SRC_DIR)/dynamic.cpp
+	$(CXX) $(CXXFLAGS) $(LLVM_CXXFLAGS) $(CLANG_INCLUDES) $^ $(CLANG_LIBS) $(LLVM_LDFLAGS) -o $@
+
+$(BUILDDIR)/restart: $(SRC_DIR)/restart.cpp
 	$(CXX) $(CXXFLAGS) $(LLVM_CXXFLAGS) $(CLANG_INCLUDES) $^ $(CLANG_LIBS) $(LLVM_LDFLAGS) -o $@
 
 .PHONY: clean
